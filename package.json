@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && prisma migrate deploy && next build",
+    "build:netlify": "prisma generate && prisma migrate deploy && tsx prisma/seed.ts && next build",
     "start": "next start",
     "start:prod": "prisma migrate deploy && tsx prisma/seed.ts && next start",
     "lint": "eslint",
@@ -33,6 +34,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.15.12",
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",

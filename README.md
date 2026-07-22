@@ -1,46 +1,39 @@
 # FOTOSSSURF
 
-Site do fotógrafo de surf: álbuns diários, galeria com marca d'água, carrinho e venda de **download digital** via Mercado Pago (Pix/cartão).
+Site do fotógrafo de surf: álbuns, galeria com marca d'água, vendas digitais e pacotes WhatsApp.
 
-## Stack
+## Deploy com 1 clique (Netlify)
 
-- Next.js (App Router) + TypeScript + Tailwind CSS
-- PostgreSQL + Prisma
-- Auth.js (credentials) para o painel admin
-- Storage local (`/storage`), Cloudflare R2 ou Vercel Blob
-- Mercado Pago Checkout Preferences + webhook
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/bryanfernandesVPN/fotosssurf)
 
-## Setup local
+### Antes do clique (2 minutos — pelo celular/4G)
+
+1. Crie um banco grátis: [console.neon.tech](https://console.neon.tech) → New Project → copie a **Connection string** (`postgresql://...`)
+2. Clique no botão **Deploy to Netlify** acima
+3. Entre com GitHub e autorize o repo
+4. Cole:
+   - `DATABASE_URL` → connection string do Neon
+   - `NEXTAUTH_SECRET` → qualquer texto longo aleatório (ex. gerado em https://generate-secret.vercel.app/32)
+   - `AUTH_SECRET` → o mesmo valor
+5. Deploy → aguarde → abra a URL `*.netlify.app`
+
+**Admin:** `fotosssurf@gmail.com` / `fotosssurf@`
+
+> Depois do 1º deploy, em Site settings → Environment variables, confira se `URL` do Netlify existe (o site usa automaticamente). Se o login admin falhar, adicione `NEXTAUTH_URL` e `NEXT_PUBLIC_APP_URL` com a URL final do site.
+
+## Rodar local
+
+Precisa da mesma `DATABASE_URL` do Neon (Postgres). Sem Docker.
 
 ```bash
 npm install
 cp .env.example .env
-docker compose up -d
+# edite .env e cole DATABASE_URL do Neon
 npx prisma migrate deploy
 npm run db:seed
 npm run dev
 ```
 
-Abra [http://localhost:3000](http://localhost:3000).
+## Stack
 
-Admin: ver `ADMIN_EMAIL` / `ADMIN_PASSWORD` no `.env`.
-
-## Deploy no Render (URL gratuita)
-
-1. Crie um Postgres gratuito em [Neon](https://console.neon.tech) e copie a `DATABASE_URL`
-2. Abra o deploy: [Deploy no Render](https://render.com/deploy?repo=https://github.com/bryanfernandesVPN/fotosssurf)
-3. No Render, preencha:
-   - `DATABASE_URL` — string do Neon
-   - `NEXTAUTH_URL` e `NEXT_PUBLIC_APP_URL` — URL do serviço (ex. `https://fotosssurf.onrender.com`)
-4. Após o primeiro deploy, o seed cria o admin automaticamente
-
-## Variáveis de ambiente
-
-Veja [`.env.example`](.env.example).
-
-## Scripts
-
-- `npm run dev` — desenvolvimento
-- `npm run build` / `npm start` — produção local
-- `npm run start:prod` — migrate + seed + start (Render)
-- `npm run db:migrate` / `npm run db:seed`
+Next.js · PostgreSQL (Neon) · Prisma · Auth.js · Mercado Pago · WhatsApp
