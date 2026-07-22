@@ -24,9 +24,7 @@ Abra [http://localhost:3000](http://localhost:3000).
 
 **Admin padrão** (definido no `.env` / seed):
 
-- URL: `/admin`
-- E-mail: `admin@fotossurf.com`
-- Senha: `admin123` (troque em produção)
+
 
 Sem `MERCADOPAGO_ACCESS_TOKEN`, o checkout em **development** marca o pedido como pago automaticamente para você testar downloads.
 
