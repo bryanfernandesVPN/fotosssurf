@@ -41,17 +41,17 @@ export async function POST(req: NextRequest) {
     const watermarkKey = `watermarks/${albumId}/${id}.jpg`;
     const thumbKey = `thumbs/${albumId}/${id}.jpg`;
 
-    await putObject(originalKey, processed.original, "image/jpeg");
-    await putObject(watermarkKey, processed.watermark, "image/jpeg");
-    await putObject(thumbKey, processed.thumb, "image/jpeg");
+    const storedOriginal = await putObject(originalKey, processed.original, "image/jpeg");
+    const storedWatermark = await putObject(watermarkKey, processed.watermark, "image/jpeg");
+    const storedThumb = await putObject(thumbKey, processed.thumb, "image/jpeg");
 
     const photo = await prisma.photo.create({
       data: {
         albumId,
         filename: file.name,
-        originalKey,
-        watermarkKey,
-        thumbKey,
+        originalKey: storedOriginal,
+        watermarkKey: storedWatermark,
+        thumbKey: storedThumb,
         width: processed.width,
         height: processed.height,
         sortOrder: sortBase++,

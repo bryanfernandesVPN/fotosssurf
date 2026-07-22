@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { getObjectBuffer, r2Configured, getSignedDownloadUrl } from "@/lib/storage";
+import { getObjectBuffer, r2Configured, blobConfigured, getSignedDownloadUrl } from "@/lib/storage";
 
 export const runtime = "nodejs";
 
@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Foto não encontrada" }, { status: 404 });
   }
 
-  if (r2Configured()) {
+  if (r2Configured() || blobConfigured() || photo.originalKey.startsWith("http")) {
     const url = await getSignedDownloadUrl(
       photo.originalKey,
       600,

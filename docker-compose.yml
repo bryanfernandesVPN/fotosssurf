@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: fotosssurf
+      POSTGRES_PASSWORD: fotosssurf
+      POSTGRES_DB: fotosssurf
+    ports:
+      - "5432:5432"
+    volumes:
+      - fotosssurf_pg:/var/lib/postgresql/data
+
+volumes:
+  fotosssurf_pg:

@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: fotosssurf
+    runtime: node
+    plan: free
+    region: oregon
+    branch: master
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "22.12.0"
+      - key: DATABASE_URL
+        sync: false
+      - key: NEXTAUTH_SECRET
+        generateValue: true
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: NEXTAUTH_URL
+        sync: false
+      - key: NEXT_PUBLIC_APP_URL
+        sync: false
+      - key: ADMIN_EMAIL
+        value: fotosssurf@gmail.com
+      - key: ADMIN_PASSWORD
+        value: fotosssurf@
+      - key: ADMIN_NAME
+        value: FOTOSSSURF
+      - key: NEXT_PUBLIC_WHATSAPP_NUMBER
+        value: "5521979864010"
+      - key: MERCADOPAGO_ACCESS_TOKEN
+        sync: false
+      - key: BLOB_READ_WRITE_TOKEN
+        sync: false

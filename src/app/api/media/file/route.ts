@@ -9,7 +9,19 @@ export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
   const key = req.nextUrl.searchParams.get("key");
-  if (!key || key.includes("..") || key.startsWith("/") || key.includes("\\")) {
+  if (!key || key.includes("..")) {
+    return NextResponse.json({ error: "Chave inválida" }, { status: 400 });
+  }
+
+  // Absolute Blob/R2 public URLs: redirect
+  if (key.startsWith("http://") || key.startsWith("https://")) {
+    if (key.includes("/originals/")) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 403 });
+    }
+    return NextResponse.redirect(key);
+  }
+
+  if (key.startsWith("/") || key.includes("\\")) {
     return NextResponse.json({ error: "Chave inválida" }, { status: 400 });
   }
 
