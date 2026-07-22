@@ -90,12 +90,19 @@ export async function getObjectBuffer(key: string): Promise<Buffer> {
         token: process.env.BLOB_READ_WRITE_TOKEN,
       });
       if (!result?.stream) throw new Error(`Blob não encontrado: ${key}`);
+      const stream = result.stream as ReadableStream<Uint8Array> & NodeJS.ReadableStream;
       const chunks: Buffer[] = [];
-      const reader = result.stream.getReader();
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(Buffer.from(value));
+      if (typeof stream.getReader === "function") {
+        const reader = stream.getReader();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(Buffer.from(value));
+        }
+      } else {
+        for await (const chunk of stream as AsyncIterable<Uint8Array | Buffer>) {
+          chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+        }
       }
       return Buffer.concat(chunks);
     }

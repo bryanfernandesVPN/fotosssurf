@@ -7,6 +7,7 @@ import { prisma } from "@/lib/db";
 import { publicMediaUrl } from "@/lib/storage";
 import { formatBRL, photoPrice } from "@/lib/money";
 import { UploadForm } from "@/components/UploadForm";
+import { DeleteAlbumButton } from "@/components/DeleteAlbumButton";
 
 export const dynamic = "force-dynamic";
 
@@ -66,6 +67,39 @@ async function deletePhoto(photoId: string, albumId: string) {
   revalidatePath("/albuns");
 }
 
+async function deleteAlbum(albumId: string) {
+  "use server";
+  const session = await auth();
+  if (!session?.user) throw new Error("Não autorizado");
+
+  const photos = await prisma.photo.findMany({
+    where: { albumId },
+    select: { id: true },
+  });
+  const photoIds = photos.map((p) => p.id);
+
+  if (photoIds.length > 0) {
+    const sold = await prisma.orderItem.count({
+      where: { photoId: { in: photoIds } },
+    });
+    if (sold > 0) {
+      throw new Error(
+        "Não é possível apagar: este álbum tem fotos já vendidas em pedidos.",
+      );
+    }
+
+    await prisma.cartItem.deleteMany({
+      where: { photoId: { in: photoIds } },
+    });
+  }
+
+  await prisma.album.delete({ where: { id: albumId } });
+
+  revalidatePath("/admin/albuns");
+  revalidatePath("/albuns");
+  redirect("/admin/albuns");
+}
+
 export default async function AdminAlbumDetailPage({ params }: Props) {
   const session = await auth();
   if (!session?.user) redirect("/admin/login");
@@ -78,20 +112,29 @@ export default async function AdminAlbumDetailPage({ params }: Props) {
   if (!album) notFound();
 
   const update = updateAlbum.bind(null, album.id);
+  const removeAlbum = deleteAlbum.bind(null, album.id);
 
   return (
     <div>
       <Link href="/admin/albuns" className="text-sm text-muted hover:text-cyan">
         ← Álbuns
       </Link>
-      <h1 className="mt-2 font-display text-5xl text-foam">{album.title}</h1>
-      {album.status === "published" ? (
-        <Link href={`/albuns/${album.slug}`} className="text-sm text-cyan hover:underline">
-          Ver página pública
-        </Link>
-      ) : null}
+      <div className="mt-2 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-5xl text-foam">{album.title}</h1>
+          {album.status === "published" ? (
+            <Link href={`/albuns/${album.slug}`} className="text-sm text-cyan hover:underline">
+              Ver página pública
+            </Link>
+          ) : null}
+        </div>
+        <DeleteAlbumButton action={removeAlbum} />
+      </div>
 
-      <form action={update} className="mt-8 grid max-w-2xl gap-4 rounded border border-border bg-[#0a1628] p-6 shadow-lg shadow-black/30">
+      <form
+        action={update}
+        className="mt-8 grid max-w-2xl gap-4 rounded border border-border bg-[#0a1628] p-6 shadow-lg shadow-black/30"
+      >
         <div>
           <label className="label" htmlFor="title">
             Título
