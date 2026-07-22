@@ -5,9 +5,9 @@ Site do fotógrafo de surf: álbuns diários, galeria com marca d'água, carrinh
 ## Stack
 
 - Next.js (App Router) + TypeScript + Tailwind CSS
-- SQLite + Prisma (troque para Postgres em produção alterando `provider` e `DATABASE_URL`)
+- PostgreSQL + Prisma
 - Auth.js (credentials) para o painel admin
-- Storage local (`/storage`) ou Cloudflare R2
+- Storage local (`/storage`), Cloudflare R2 ou Vercel Blob
 - Mercado Pago Checkout Preferences + webhook
 
 ## Setup local
@@ -15,50 +15,32 @@ Site do fotógrafo de surf: álbuns diários, galeria com marca d'água, carrinh
 ```bash
 npm install
 cp .env.example .env
-npx prisma migrate dev --name init
+docker compose up -d
+npx prisma migrate deploy
 npm run db:seed
 npm run dev
 ```
 
 Abra [http://localhost:3000](http://localhost:3000).
 
-**Admin padrão** (definido no `.env` / seed):
+Admin: ver `ADMIN_EMAIL` / `ADMIN_PASSWORD` no `.env`.
 
+## Deploy no Render (URL gratuita)
 
-
-Sem `MERCADOPAGO_ACCESS_TOKEN`, o checkout em **development** marca o pedido como pago automaticamente para você testar downloads.
+1. Crie um Postgres gratuito em [Neon](https://console.neon.tech) e copie a `DATABASE_URL`
+2. Abra o deploy: [Deploy no Render](https://render.com/deploy?repo=https://github.com/bryanfernandesVPN/fotosssurf)
+3. No Render, preencha:
+   - `DATABASE_URL` — string do Neon
+   - `NEXTAUTH_URL` e `NEXT_PUBLIC_APP_URL` — URL do serviço (ex. `https://fotosssurf.onrender.com`)
+4. Após o primeiro deploy, o seed cria o admin automaticamente
 
 ## Variáveis de ambiente
 
-Veja [`.env.example`](.env.example):
-
-| Variável | Uso |
-|----------|-----|
-| `DATABASE_URL` | SQLite `file:./dev.db` ou Postgres |
-| `NEXTAUTH_SECRET` | Segredo da sessão admin |
-| `ADMIN_*` | Credenciais criadas no seed |
-| `R2_*` | Opcional — sem isso usa pasta `storage/` |
-| `MERCADOPAGO_ACCESS_TOKEN` | Token de produção ou teste MP |
-| `NEXT_PUBLIC_APP_URL` | URL pública (webhooks e back_urls) |
-
-## Fluxo do fotógrafo
-
-1. Entrar em `/admin`
-2. Criar álbum (data, praia, preço padrão)
-3. Upload em lote das fotos do dia
-4. Publicar o álbum
-5. Surfers compram na galeria → Mercado Pago → download na página do pedido
-
-## Produção (resumo)
-
-1. Banco Postgres (Neon/Supabase) — mude `provider = "postgresql"` no `prisma/schema.prisma`
-2. Bucket R2 + `R2_PUBLIC_URL` para previews
-3. Conta Mercado Pago + webhook apontando para `https://seu-dominio/api/webhooks/mercadopago`
-4. Deploy na Vercel com as env vars
+Veja [`.env.example`](.env.example).
 
 ## Scripts
 
 - `npm run dev` — desenvolvimento
-- `npm run build` / `npm start` — produção
-- `npm run db:migrate` — migrations
-- `npm run db:seed` — cria/atualiza admin
+- `npm run build` / `npm start` — produção local
+- `npm run start:prod` — migrate + seed + start (Render)
+- `npm run db:migrate` / `npm run db:seed`
