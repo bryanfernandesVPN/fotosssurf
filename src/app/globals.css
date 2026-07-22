@@ -1,0 +1,379 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #0b1c33;
+  --navy-deep: #06101f;
+  --foam: #e8f4fc;
+  --cyan: #5ec8f2;
+  --cyan-bright: #8adfff;
+  --wave: #2a6f9e;
+  --sand: #c9b8a0;
+  --background: #071527;
+  --foreground: #f3f8fc;
+  --muted: #9bb4c9;
+  --card: rgba(255, 255, 255, 0.04);
+  --border: rgba(142, 198, 230, 0.18);
+  --accent: #5ec8f2;
+  --danger: #ff6b6b;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-navy: var(--navy);
+  --color-navy-deep: var(--navy-deep);
+  --color-foam: var(--foam);
+  --color-cyan: var(--cyan);
+  --color-cyan-bright: var(--cyan-bright);
+  --color-wave: var(--wave);
+  --color-sand: var(--sand);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+.font-display {
+  font-family: var(--font-display), Impact, sans-serif;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.ocean-bg {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(94, 200, 242, 0.18), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(42, 111, 158, 0.35), transparent 50%),
+    linear-gradient(180deg, #0a1a30 0%, #06101f 45%, #0b2744 100%);
+}
+
+.wave-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='40' viewBox='0 0 120 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 Q15 5 30 20 T60 20 T90 20 T120 20' fill='none' stroke='%235ec8f2' stroke-opacity='0.08' stroke-width='2'/%3E%3C/svg%3E");
+  background-size: 120px 40px;
+}
+
+@keyframes drift {
+  from { transform: translateY(0); }
+  to { transform: translateY(-8px); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-drift {
+  animation: drift 4s ease-in-out infinite alternate;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out both;
+}
+
+.animate-fade-up-delay {
+  animation: fade-up 0.7s ease-out 0.15s both;
+}
+
+/* —— Cinematic 3D —— */
+.cinema-letterbox {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  height: clamp(18px, 3.5vh, 36px);
+  background: #02060c;
+  pointer-events: none;
+}
+
+.cinema-letterbox-top {
+  top: 0;
+}
+
+.cinema-letterbox-bottom {
+  bottom: 0;
+}
+
+.cinema-grain {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+.cinema-vignette {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 35%,
+    rgba(2, 8, 18, 0.55) 100%
+  );
+}
+
+.cinema-scan {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  opacity: 0.07;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 2px,
+    rgba(0, 0, 0, 0.35) 3px
+  );
+}
+
+.cinema-kenburns {
+  animation: kenburns 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.12) translate3d(-2%, -1.5%, 0);
+  }
+}
+
+.cinema-plane {
+  animation: plane-float 7s ease-in-out infinite alternate;
+  will-change: transform;
+  background: #0a1628;
+}
+
+.cinema-depth-scene,
+.cinema-depth-world {
+  background: #050d18;
+}
+
+@keyframes plane-float {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinema-kenburns,
+  .cinema-plane,
+  .animate-drift {
+    animation: none !important;
+  }
+}
+
+.album-3d {
+  transform: perspective(900px) rotateX(0deg) translateZ(0);
+  transition: transform 0.35s ease, border-color 0.2s ease;
+  transform-style: preserve-3d;
+}
+
+.album-3d:hover {
+  transform: perspective(900px) rotateX(4deg) translateY(-6px) translateZ(18px);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.25rem;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  transition: transform 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--cyan) 0%, #3aa8d8 100%);
+  color: #041018;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--cyan-bright) 0%, var(--cyan) 100%);
+}
+
+.btn-ghost {
+  border: 1px solid var(--border);
+  color: var(--foam);
+  background: transparent;
+}
+
+.btn-ghost:hover {
+  border-color: var(--cyan);
+  color: var(--cyan-bright);
+}
+
+.input {
+  width: 100%;
+  border: 1px solid rgba(142, 198, 230, 0.35);
+  background: #0a1628;
+  color: #f3f8fc;
+  border-radius: 0.25rem;
+  padding: 0.7rem 0.9rem;
+  outline: none;
+  color-scheme: dark;
+  caret-color: #8adfff;
+}
+
+.input::placeholder {
+  color: #7a95ab;
+  opacity: 1;
+}
+
+.input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 2px rgba(94, 200, 242, 0.25);
+  background: #0d1c32;
+}
+
+.input option,
+.input optgroup {
+  background: #0a1628;
+  color: #f3f8fc;
+}
+
+/* Chrome/Edge autofill: evita texto claro em fundo amarelo/branco */
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #f3f8fc;
+  caret-color: #8adfff;
+  box-shadow: 0 0 0 1000px #0a1628 inset;
+  transition: background-color 99999s ease-out;
+}
+
+input[type="date"].input,
+input[type="datetime-local"].input,
+input[type="time"].input,
+input[type="number"].input,
+select.input,
+textarea.input {
+  background: #0a1628;
+  color: #f3f8fc;
+}
+
+input[type="date"].input::-webkit-calendar-picker-indicator {
+  filter: invert(0.85);
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+.label {
+  display: block;
+  font-size: 0.85rem;
+  color: #c5d6e6;
+  margin-bottom: 0.35rem;
+  font-weight: 500;
+}
+
+/* Admin: alto contraste (título, labels e campos) */
+.admin-shell {
+  background: #050d18;
+  color: #f5f9fc;
+}
+
+.admin-panel {
+  color: #f5f9fc;
+}
+
+.admin-title {
+  font-family: var(--font-display), Impact, sans-serif;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+}
+
+.admin-subtitle {
+  margin-top: 0.6rem;
+  color: #d7e6f2;
+  font-size: 0.95rem;
+}
+
+.admin-form {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #081525;
+  padding: 1.35rem;
+  border-radius: 0.35rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.admin-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.admin-input {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: #ffffff;
+  color: #0a1628;
+  border-radius: 0.3rem;
+  padding: 0.75rem 0.9rem;
+  outline: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color-scheme: light;
+}
+
+.admin-input::placeholder {
+  color: #5a6f82;
+  opacity: 1;
+}
+
+.admin-input:focus {
+  border-color: #2a6f9e;
+  box-shadow: 0 0 0 3px rgba(94, 200, 242, 0.35);
+}
+
+.admin-input option {
+  background: #ffffff;
+  color: #0a1628;
+}
+
+.admin-input:-webkit-autofill,
+.admin-input:-webkit-autofill:hover,
+.admin-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #0a1628;
+  box-shadow: 0 0 0 1000px #ffffff inset;
+  transition: background-color 99999s ease-out;
+}
+
+input[type="date"].admin-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.75;
+}
