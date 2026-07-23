@@ -40,6 +40,9 @@ export async function SiteHeader() {
           <Link href="/albuns" className="hover:text-cyan-bright transition-colors">
             Álbuns
           </Link>
+          <Link href="/#sobre" className="hover:text-cyan-bright transition-colors">
+            Sobre
+          </Link>
           <Link href="/#pacotes" className="hover:text-cyan-bright transition-colors">
             Pacotes
           </Link>

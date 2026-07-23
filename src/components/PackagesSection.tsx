@@ -1,3 +1,5 @@
+import { WaveButton } from "@/components/WaveTransition";
+
 const PACKAGES = [
   {
     id: "fora-da-agua",
@@ -80,14 +82,13 @@ export function PackagesSection() {
                 <p className="text-sm leading-relaxed text-[#c5d6e6]">
                   {pkg.description}
                 </p>
-                <a
+                <WaveButton
                   href={whatsappUrl(pkg.message)}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  external
                   className="btn btn-primary w-full sm:w-auto"
                 >
                   Agendar
-                </a>
+                </WaveButton>
               </div>
             </li>
           ))}

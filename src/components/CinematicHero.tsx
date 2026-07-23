@@ -54,11 +54,11 @@ export function CinematicHero({ latestAlbumHref, latestAlbumLabel }: Props) {
   return (
     <section
       ref={ref}
-      className="cinema-hero relative min-h-[calc(100vh-4.5rem)] overflow-hidden"
+      className="relative min-h-[calc(100vh-4.5rem)] overflow-hidden"
       style={{ perspective: "1400px" }}
     >
       <div
-        className="cinema-stage absolute inset-0"
+        className="absolute inset-0"
         style={{
           transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.06)`,
           transition: "transform 0.35s ease-out",
@@ -73,7 +73,7 @@ export function CinematicHero({ latestAlbumHref, latestAlbumLabel }: Props) {
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
             poster="/cinematic/barrel.png"
             aria-label="Vídeo de surf FOTOSSSURF"
           >
@@ -97,7 +97,7 @@ export function CinematicHero({ latestAlbumHref, latestAlbumLabel }: Props) {
 
       <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4.5rem)] max-w-6xl flex-col justify-end px-4 pb-20 pt-24 sm:pb-28">
         <div
-          className="cinema-copy max-w-2xl"
+          className="max-w-2xl"
           style={{
             transform: `translateZ(80px) translateY(${tilt.x * -0.4}px)`,
             transition: "transform 0.35s ease-out",

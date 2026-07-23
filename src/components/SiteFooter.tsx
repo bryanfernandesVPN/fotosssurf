@@ -30,6 +30,9 @@ export function SiteFooter() {
             >
               Instagram
             </a>
+            <Link href="/#sobre" className="hover:text-cyan">
+              Sobre
+            </Link>
             <Link href="/#pacotes" className="hover:text-cyan">
               Pacotes
             </Link>

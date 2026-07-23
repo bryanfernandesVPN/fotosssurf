@@ -3,6 +3,7 @@ import { Bebas_Neue, Manrope } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { WaveTransitionProvider } from "@/components/WaveTransition";
 
 const display = Bebas_Neue({
   weight: "400",
@@ -35,9 +36,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${display.variable} ${body.variable} h-full`}>
       <body className="min-h-full flex flex-col bg-[#050d18] antialiased">
-        <SiteHeader />
-        <main className="flex-1 bg-[#050d18]">{children}</main>
-        <SiteFooter />
+        <WaveTransitionProvider>
+          <SiteHeader />
+          <main className="flex-1 bg-[#050d18]">{children}</main>
+          <SiteFooter />
+        </WaveTransitionProvider>
       </body>
     </html>
   );

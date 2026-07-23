@@ -3,6 +3,7 @@ import { ptBR } from "date-fns/locale";
 import { prisma } from "@/lib/db";
 import { CinematicHero } from "@/components/CinematicHero";
 import { CinemaDepthGallery } from "@/components/CinemaDepthGallery";
+import { BioSection } from "@/components/BioSection";
 import { PackagesSection } from "@/components/PackagesSection";
 
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ export default async function HomePage() {
       />
       <CinemaDepthGallery />
       <PackagesSection />
+      <BioSection />
     </div>
   );
 }

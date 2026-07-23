@@ -5,7 +5,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { get as getBlob, put as putBlob } from "@vercel/blob";
-import { createReadStream, existsSync, mkdirSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { readFile } from "fs/promises";
 import path from "path";
 import { Readable } from "stream";
@@ -164,10 +164,6 @@ export function publicMediaUrl(key: string): string {
     return `${process.env.R2_PUBLIC_URL.replace(/\/$/, "")}/${key}`;
   }
   return `/api/media/file?key=${encodeURIComponent(key)}`;
-}
-
-export function createReadStreamLocal(key: string) {
-  return createReadStream(path.join(LOCAL_ROOT, key));
 }
 
 export function localFileExists(key: string): boolean {
