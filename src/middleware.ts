@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
+function authSecret() {
+  return process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
+}
+
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
@@ -10,9 +14,15 @@ export async function middleware(req: NextRequest) {
   }
 
   if (pathname.startsWith("/admin")) {
+    // On Vercel (HTTPS), Auth.js sets `__Secure-authjs.session-token`.
+    // getToken defaults to the non-prefixed name unless secureCookie is true.
+    const secureCookie =
+      req.nextUrl.protocol === "https:" || process.env.VERCEL === "1";
+
     const token = await getToken({
       req,
-      secret: process.env.NEXTAUTH_SECRET,
+      secret: authSecret(),
+      secureCookie,
     });
     if (!token) {
       const url = req.nextUrl.clone();
